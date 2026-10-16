@@ -1,0 +1,87 @@
+/* The side panel shell's styles (ui/panel-shell.js): the panel's base type and controls, the
+   full-height layout (the header row, then the shown view, which fills the rest), the 56px header
+   with the Chat control (a pill naming the open chat) and the round "…" menu button, the menu
+   popover (8px corners, elevation, 40px rows with 20px icons), and the switch every settings row
+   uses (an input checkbox followed by an <i>). Colors and sizes are chat.css's --chat-* tokens; the
+   product loads this after chat.css and before its own CSS. Split from X Gardener
+   src/ext/sidepanel/panel.css (its panel base and toolbar). */
+.chat-panel { display: grid !important; grid-template-rows: 56px minmax(0, 1fr); color: var(--chat-ink); background: var(--chat-paper); font-size: var(--chat-text-md);
+  font-family: var(--chat-font, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif); }
+.chat-panel * { box-sizing: border-box; }
+.chat-panel [hidden] { display: none !important; }
+/* Controls take the panel's type; any rule that sizes one wins over this (no specificity). */
+:where(.chat-panel) :where(button, textarea, input, select) { font: inherit; }
+.chat-panel button { cursor: pointer; }
+.chat-panel button:disabled { cursor: default; opacity: .5; }
+.chat-panel :is(button, textarea, input, select, summary, a):focus-visible { outline: 2px solid var(--chat-focus); outline-offset: 2px; }
+.chat-panel-main { display: block !important; overflow: hidden; }
+.chat-panel-main, .chat-panel-view { height: 100%; min-height: 0; }
+.chat-panel-header { position: relative; z-index: 5; height: 56px; padding: 8px 8px 8px 12px; display: grid !important; grid-template-columns: minmax(0, 1fr) auto 40px; gap: 8px; align-items: center; border-bottom: 1px solid var(--chat-line); background: var(--chat-paper); }
+.chat-panel-header details { position: relative; min-width: 0; }
+.chat-panel-header summary { list-style: none; }
+.chat-panel-header summary::-webkit-details-marker { display: none; }
+/* Without an account header the Chat control leads, its thread list opening under it. */
+.chat-panel-header.is-chat-first { grid-template-columns: minmax(0, 1fr) 40px; padding-left: 8px; }
+.chat-panel-lead { min-width: 0; display: flex; align-items: center; gap: 8px; }
+/* The Chat control: a pill naming the open chat while the chat is shown, a quiet "Chat" otherwise. */
+.chat-panel-tab { position: relative; max-width: 150px; height: 32px; padding: 0 8px 0 12px; display: inline-flex; align-items: center; gap: 4px; border: 0; border-radius: 16px; color: var(--chat-muted); background: transparent; font-size: var(--chat-text-md); font-weight: 500; white-space: nowrap; }
+.chat-panel-tab:hover { color: var(--chat-ink); background: color-mix(in srgb, var(--chat-ink) 8%, transparent); }
+.chat-panel-tab.is-active { color: var(--chat-ink); background: var(--chat-surface-high); }
+.chat-panel-tab.is-active:hover { background: color-mix(in srgb, var(--chat-ink) 8%, var(--chat-surface-high)); }
+.chat-panel-chat-title, .chat-panel-chat-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.chat-panel-tab:not(.is-active) .chat-panel-chat-title, .chat-panel-chat-title:empty, .chat-panel-tab.is-active .chat-panel-chat-title:not(:empty) + .chat-panel-chat-label { display: none; }
+.chat-panel-chat-chevron { flex: 0 0 auto; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 120ms ease; }
+.chat-panel-tab[aria-expanded="true"] { color: var(--chat-on-accent-container); background: var(--chat-accent-container); }
+.chat-panel-tab[aria-expanded="true"] .chat-panel-chat-chevron { transform: rotate(180deg); }
+.chat-panel-chat { position: relative; min-width: 0; }
+.chat-panel-lead .chat-panel-tab { max-width: min(220px, 60vw); }
+.chat-panel-more > summary { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; cursor: pointer; color: var(--chat-muted); }
+.chat-panel-more > summary:hover { color: var(--chat-ink); background: color-mix(in srgb, var(--chat-ink) 8%, transparent); }
+.chat-panel-more[open] > summary, .chat-panel-more > summary.is-active { color: var(--chat-ink); background: var(--chat-surface-high); }
+.chat-panel-more > summary svg { width: 20px; height: 20px; fill: currentColor; stroke: none; }
+/* A menu: 8px corners, elevation, 40px rows with a 20px icon, dividers between groups. */
+.chat-panel-popover { position: absolute; top: calc(100% + 4px); left: 0; z-index: 9; width: min(280px, calc(100vw - 16px)); padding: 8px 0; border-radius: 8px; background: var(--chat-paper); box-shadow: var(--chat-elevation); }
+.chat-panel-more-options { right: 0; left: auto; width: min(232px, calc(100vw - 16px)); }
+.chat-panel-menu-note { margin: 8px 0 0; padding: 10px 16px 4px; border-top: 1px solid var(--chat-line); color: var(--chat-muted); font-size: var(--chat-text-xs); line-height: 1.5; }
+.chat-panel-popover > button { width: 100%; min-height: 40px; padding: 4px 16px; display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 16px; align-items: center; border: 0; border-radius: 0; color: var(--chat-ink); background: transparent; font-size: var(--chat-text-md); text-align: left; }
+.chat-panel-popover > button:hover { background: var(--chat-hover); }
+.chat-panel-popover > button[aria-current="true"] { background: var(--chat-surface-high); }
+.chat-panel-popover > button strong, .chat-panel-popover > button small { display: block; }
+.chat-panel-popover > button strong { font-size: var(--chat-text-md); font-weight: 400; }
+.chat-panel-popover > button small { margin-top: 2px; color: var(--chat-muted); font-size: var(--chat-text-xs); font-weight: 400; }
+.chat-panel-more-options > button { min-height: 40px; padding: 0 16px; }
+.chat-panel-menu-icon { display: grid; place-items: center; color: var(--chat-muted); }
+.chat-panel-menu-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.chat-panel-more-options > button.is-active, .chat-panel-more-options > button.is-active .chat-panel-menu-icon { color: var(--chat-on-accent-container); }
+.chat-panel-more-options > button.is-active { background: var(--chat-accent-container); }
+/* After an account header the thread list opens under the Chat control, its right edge at the
+   header's (past the 40px "…" button and the 8px gap). */
+.chat-panel-chat-menu { position: absolute; top: calc(100% + 4px); right: -48px; z-index: 9; }
+.chat-panel-lead .chat-panel-chat-menu { right: auto; left: 0; }
+/* The switch (Material): a 40×24 track; off, an outlined track with a small grey knob; on, a filled
+   track with a larger white knob at the end. Any settings row's checkbox followed by an <i>. */
+.chat-panel input[type="checkbox"] + i { position: relative; flex: 0 0 auto; display: block; width: 40px; height: 24px; padding: 0; border: 1.5px solid var(--chat-switch-off); border-radius: 12px; background: var(--chat-switch-track); transition: background 120ms ease, border-color 120ms ease; }
+.chat-panel input[type="checkbox"] + i::after { content: ""; position: absolute; top: 50%; left: 4px; display: block; width: 12px; height: 12px; border-radius: 50%; background: var(--chat-switch-off); transform: translateY(-50%); transition: left 120ms ease, width 120ms ease, height 120ms ease, background 120ms ease; }
+.chat-panel input[type="checkbox"]:checked + i { border: 2px solid var(--chat-accent); background: var(--chat-accent); }
+.chat-panel input[type="checkbox"]:checked + i::after { left: 18px; width: 16px; height: 16px; background: var(--chat-on-accent); transform: translateY(-50%); }
+.chat-panel input[type="checkbox"]:disabled + i { opacity: .38; }
+.chat-panel input[type="checkbox"]:focus-visible + i { outline: 2px solid var(--chat-focus); outline-offset: 2px; }
+/* A page over the shown view (ui/page.js): it covers the view on the panel's own paper (no
+   backdrop) and slides in from the side; its head is a back button, the view it came from and the
+   title, with actions at the right; its body scrolls; an optional foot holds its buttons. The view
+   it covers is its containing block (position: relative). */
+.chat-page { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; overflow: hidden; background: var(--chat-paper); animation: chat-page-in 160ms ease-out; }
+.chat-page-head { flex: 0 0 auto; min-height: 56px; padding: 8px 12px 0 8px; display: flex; align-items: center; gap: 4px; }
+.chat-page-back { flex: 0 0 auto; width: 40px; height: 40px; padding: 0; display: grid; place-items: center; border: 0; border-radius: 50%; color: var(--chat-muted); background: transparent; }
+.chat-page-back:hover { color: var(--chat-ink); background: color-mix(in srgb, var(--chat-ink) 8%, transparent); }
+.chat-page-back svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.chat-page-title { flex: 1; min-width: 0; }
+.chat-page-title small { display: block; color: var(--chat-muted); font-size: var(--chat-text-xs); line-height: 1.4; }
+.chat-page-title h2 { margin: 0; overflow: hidden; color: var(--chat-ink); font-size: var(--chat-text-title); font-weight: 500; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+.chat-page-title h2:focus { outline: none; }
+.chat-page-title h2:focus-visible { outline: 2px solid var(--chat-focus); outline-offset: 2px; border-radius: 4px; }
+.chat-page-controls { flex: 0 0 auto; display: flex; align-items: center; gap: 4px; }
+.chat-page-body { flex: 1; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
+.chat-page-foot { flex: 0 0 auto; padding: 12px 16px; display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--chat-line); background: var(--chat-paper); }
+@keyframes chat-page-in { from { opacity: 0; transform: translateX(16px); } }
+@media (prefers-reduced-motion: reduce) { .chat-page { animation: none; } }
